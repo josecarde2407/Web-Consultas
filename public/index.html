@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas Básicas</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos adicionales */
+        #resultadosTabla {
+            table-layout: fixed; /* Fija el ancho de las columnas */
+            width: 100%; /* Asegura que la tabla use el ancho completo */
+        }
+
+        #resultadosTabla th, 
+        #resultadosTabla td {
+            overflow: hidden; /* Evita que el contenido se desborde */
+            text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
+            white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+            padding: 0.75rem; /* Espaciado interno para las celdas */
+        }
+        
+        /* Definir anchos específicos para las columnas */
+        #resultadosTabla th:nth-child(1),
+        #resultadosTabla td:nth-child(1) { width: 80px; } /* SEDE */
+        
+        #resultadosTabla th:nth-child(2),
+        #resultadosTabla td:nth-child(2) { width: 100px; } /* FECHA */
+        
+        #resultadosTabla th:nth-child(3),
+        #resultadosTabla td:nth-child(3) { width: 70px; } /* MESES */
+        
+        #resultadosTabla th:nth-child(4),
+        #resultadosTabla td:nth-child(4) { width: 80px; } /* NROSAP */
+        
+        #resultadosTabla th:nth-child(5),
+        #resultadosTabla td:nth-child(5) { width: 100px; } /* OBJETO */
+        
+        #resultadosTabla th:nth-child(6),
+        #resultadosTabla td:nth-child(6) { width: 100px; } /* N_ARTICULO */
+        
+        #resultadosTabla th:nth-child(7),
+        #resultadosTabla td:nth-child(7) { width: 200px; } /* DESCRIPCION */
+        
+        #resultadosTabla th:nth-child(8),
+        #resultadosTabla td:nth-child(8) { width: 100px; } /* LOTSMA */
+        
+        #resultadosTabla th:nth-child(9),
+        #resultadosTabla td:nth-child(9) { width: 100px; } /* LOTPROVEEDOR */
+        
+        #resultadosTabla th:nth-child(10),
+        #resultadosTabla td:nth-child(10) { width: 80px; } /* CANTIDAD */
+        
+        #resultadosTabla th:nth-child(11),
+        #resultadosTabla td:nth-child(11) { width: 80px; } /* OT */
+        
+        #resultadosTabla th:nth-child(12),
+        #resultadosTabla td:nth-child(12) { width: 80px; } /* OC */
+        
+        #resultadosTabla th:nth-child(13),
+        #resultadosTabla td:nth-child(13) { width: 120px; } /* NOMALMACEN */
+        
+        #resultadosTabla th:nth-child(14),
+        #resultadosTabla td:nth-child(14) { width: 200px; } /* COMENTARIO */
+        
+        #resultadosTabla th:nth-child(15),
+        #resultadosTabla td:nth-child(15) { width: 100px; } /* USUARIO */
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="text-center">Consulta de Datos</h1>
+    </header>
+    
+    <main>
+        <form id="consultaForm" class="mb-4">
+            <div class="form-row align-items-end">
+                <div class="col-md-3 mb-3">
+                    <label for="parametro1">Digita Código:</label>
+                    <input type="text" class="form-control" id="parametro1" name="parametro1" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="parametro2">Digita Lote:</label>
+                    <input type="text" class="form-control" id="parametro2" name="parametro2">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="filtroMes">Filtrar por Mes:</label>
+                    <select id="filtroMes" class="form-control">
+                        <option value="">Todos</option>
+                        <!-- Las opciones se llenarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="filtroObjeto">Filtrar por Objeto:</label>
+                    <select id="filtroObjeto" class="form-control">
+                        <option value="">Todos</option>
+                        <!-- Las opciones se llenarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <button type="submit" class="btn btn-primary btn-block">Consultar</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Botón para descargar resultados -->
+        <button id="downloadBtn" class="btn btn-success btn-block mb-4">Descargar Resultados</button>
+
+        <section id="resultados">
+            <h2 class="mt-4">Resultados</h2>
+            <div class="table-responsive">
+                <table id="resultadosTabla" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>SEDE</th>
+                            <th>FECHA</th>
+                            <th>MESES</th>
+                            <th>NROSAP</th>
+                            <th>OBJETO</th>
+                            <th>N_ARTICULO</th>
+                            <th>DESCRIPCION</th>
+                            <th>LOTSMA</th>
+                            <th>LOTPROVEEDOR</th>
+                            <th>CANTIDAD</th>
+                            <th>OT</th>
+                            <th>OC</th>
+                            <th>NOMALMACEN</th>
+                            <th>COMENTARIO</th>
+                            <th>USUARIO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCuerpo">
+                        <!-- Los resultados se mostrarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="text-center">Consulta de datos - 2024</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="fronted.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Inicializar DataTables
+            $('#resultadosTabla').DataTable({
+                paging: false, // Activar paginación
+                searching: false, // Activar búsqueda
+                ordering: false, // Activar ordenamiento
+                info: true,
+                 //scrollY: "400px", // Solo desplazamiento vertical
+                // scrollX: true, // Descomentar si necesitas desplazamiento horizontal
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                }
+            });
+        });
+    </script>
+</body>
+</html>
